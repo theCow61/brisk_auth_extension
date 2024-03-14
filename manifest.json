@@ -1,0 +1,21 @@
+{
+  "name": "brisk_auth_extension",
+  "version": "0.1",
+  "description": "brisk_auth_extension",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": ["https://login.iastate.edu/*"],
+      "js": [
+        "brisk_auth_extension.js", "run_wasm.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["brisk_auth_extension_bg.wasm"],
+      "matches": ["https://login.iastate.edu/*"]
+    }
+  ],
+  "manifest_version": 3
+}
