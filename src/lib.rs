@@ -16,13 +16,14 @@ pub fn popup() {
     alert("test");
 }
 
-// #[wasm_bindgen]
-// extern "C" {
-//     fn getLocalStorage(key: String) -> String;
-// }
+#[wasm_bindgen(module = "/stores.js")]
+extern "C" {
+    pub fn getLocalStorage(key: &str) -> String;
+}
 
 
-#[wasm_bindgen(start)]
+// #[wasm_bindgen(start)]
+#[wasm_bindgen]
 pub fn run() {
     alert("hi");
     let window = web_sys::window().unwrap();
@@ -58,7 +59,7 @@ pub fn run() {
             }
         }
         
-        // auth_code.set_value(&getLocalStorage("key".to_owned()));
+        auth_code.set_value(&getLocalStorage("key"));
 
 
     });

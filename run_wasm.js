@@ -1,8 +1,19 @@
 
-const runtime = chrome.runtime || browser.runtime;
+ const runtime = chrome.runtime || browser.runtime;
 
-async function run() {
-  await wasm_bindgen(runtime.getURL("brisk_auth_extension_bg.wasm"));
-}
+// This was helpful here -> https://github.com/theberrigan/rust-wasm-chrome-ext/blob/master/extension/js/content.js
+const wasm_mod_url = runtime.getURL("brisk_auth_extension.js");
 
-run();
+const loadupWasmMod = async () => {
+  const { default: init } = await import(wasm_mod_url);
+  return init().catch(() => null);
+};
+
+(async () => {
+  const mod = await loadupWasmMod();
+
+  if (mod) {
+    const { run } = mod;
+    run();
+  }
+})();
