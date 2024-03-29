@@ -21,5 +21,6 @@ features = [
   "Element",
   "HtmlElement",
   "Node",
-  "HtmlInputElement"
+  "HtmlInputElement",
+  "Storage"
 ]

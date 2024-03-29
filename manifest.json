@@ -2,7 +2,9 @@
   "name": "brisk_auth_extension",
   "version": "0.1",
   "description": "brisk_auth_extension",
-  "permissions": [],
+  "permissions": [
+    "storage"
+  ],
   "content_scripts": [
     {
       "matches": ["https://login.iastate.edu/*"],
@@ -17,5 +19,8 @@
       "matches": ["https://login.iastate.edu/*"]
     }
   ],
-  "manifest_version": 3
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html"
+  }
 }

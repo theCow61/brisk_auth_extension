@@ -1,3 +1,4 @@
+
 const runtime = chrome.runtime || browser.runtime;
 
 async function run() {

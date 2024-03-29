@@ -4,12 +4,22 @@ use std::env;
 use hmac_sha1::hmac_sha1;
 
 use wasm_bindgen::prelude::*;
-use web_sys::{Element, Document, HtmlElement, HtmlInputElement};
+use web_sys::{Element, Document, HtmlElement, HtmlInputElement, Storage, js_sys::eval};
 
 #[wasm_bindgen]
 extern "C" {
     fn alert(s: &str);
 }
+
+#[wasm_bindgen]
+pub fn popup() {
+    alert("test");
+}
+
+// #[wasm_bindgen]
+// extern "C" {
+//     fn getLocalStorage(key: String) -> String;
+// }
 
 
 #[wasm_bindgen(start)]
@@ -34,9 +44,23 @@ pub fn run() {
     button.set_inner_html("Click Here!");
     body.append_child(&button).unwrap();
 
+    
     let a = Closure::<dyn FnMut()>::new(move || {
         let auth_code = document.get_element_by_id("input8").unwrap().dyn_into::<HtmlInputElement>().unwrap(); // probably subject to change
-        auth_code.set_value("WE ARE IN!!!");
+
+        let storage = window.local_storage().unwrap().unwrap();
+        match storage.get_item("key").unwrap() {
+            Some(value) => {
+                auth_code.set_value(&value);
+            },
+            None => {
+                auth_code.set_value("0");
+            }
+        }
+        
+        // auth_code.set_value(&getLocalStorage("key".to_owned()));
+
+
     });
 
     button.dyn_ref::<HtmlElement>().unwrap().set_onclick(Some(a.as_ref().unchecked_ref()));
