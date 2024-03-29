@@ -4,7 +4,7 @@ use std::env;
 use hmac_sha1::hmac_sha1;
 
 use wasm_bindgen::prelude::*;
-use web_sys::{Element, Document, HtmlElement, HtmlInputElement, Storage, js_sys::eval};
+use web_sys::{Element, Document, HtmlElement, HtmlInputElement, Storage, js_sys::{eval, Reflect}};
 
 #[wasm_bindgen]
 extern "C" {
@@ -16,11 +16,20 @@ pub fn popup() {
     alert("test");
 }
 
-#[wasm_bindgen(module = "/stores.js")]
-extern "C" {
-    pub fn getLocalStorage(key: &str) -> String;
+#[wasm_bindgen]
+pub fn got_key(key: &str) {
+    alert(key);
 }
 
+#[wasm_bindgen(module = "/stores.js")]
+extern "C" {
+    pub fn getLocalStorage(key: &str);
+}
+
+// struct Promise {
+//     ran: bool,
+//     data: String
+// }
 
 // #[wasm_bindgen(start)]
 #[wasm_bindgen]
@@ -58,8 +67,24 @@ pub fn run() {
                 auth_code.set_value("0");
             }
         }
+
+        // getLocalStorage("hi").dyn_into()::
+
+        getLocalStorage("key");
+
+        // let ran_key = JsValue::from("ran");
+        // let result_key = JsValue::from("result");
+        //
+        // let promise_obj = getLocalStorage("key");
+        //
+        // while Reflect::get(&promise_obj, &ran_key) != Ok(JsValue::from_bool(true)) {}
+        // let our_key = Reflect::get(&promise_obj, &result_key).unwrap().as_string().unwrap();
+        //
+        // auth_code.set_value(&our_key);
+
+        // getLocalStorage("key");
         
-        auth_code.set_value(&getLocalStorage("key"));
+        // auth_code.set_value(&getLocalStorage("key"));
 
 
     });

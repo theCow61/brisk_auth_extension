@@ -19,7 +19,7 @@
   "web_accessible_resources": [
     {
       "resources": ["brisk_auth_extension.js", "brisk_auth_extension_bg.wasm", "stores.js", "snippets/brisk_auth_extension-0d28f1cc4a65d82c/stores.js"],
-      "matches": [ "<all_urls>", "https://login.iastate.edu/*"]
+      "matches": ["https://login.iastate.edu/*"]
     }
   ],
   "manifest_version": 3,
