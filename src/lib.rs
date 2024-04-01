@@ -1,6 +1,4 @@
-use std::time::{SystemTime, UNIX_EPOCH};
 use data_encoding::BASE32_NOPAD;
-use std::env;
 use hmac_sha1::hmac_sha1;
 
 use wasm_bindgen::prelude::*;
@@ -16,12 +14,13 @@ pub fn popup() {
     alert("test");
 }
 
+/// getLocalStorage in stores.js should run this upon getting the key
 #[wasm_bindgen]
 pub fn got_key(key: &str) {
     let window = web_sys::window().unwrap();
     let document = window.document().unwrap();
     let auth_code = document.get_element_by_id("input8").unwrap().dyn_into::<HtmlInputElement>().unwrap(); // probably subject to change
-    auth_code.set_value(key);
+    auth_code.set_value(&format!("{}", totp_code(key)));
 }
 
 #[wasm_bindgen(module = "/stores.js")]
@@ -29,27 +28,11 @@ extern "C" {
     pub fn getLocalStorage(key: &str);
 }
 
-// struct Promise {
-//     ran: bool,
-//     data: String
-// }
-
-// #[wasm_bindgen(start)]
 #[wasm_bindgen]
 pub fn run() {
     let window = web_sys::window().unwrap();
     let document = window.document().unwrap();
     let body = document.body().unwrap();
-
-    // let val = document.create_element("h1").unwrap();
-    // 
-    // val.set_inner_html("YOO");
-    // body.append_child(&val).unwrap();
-    
-    // let it = document.get_element_by_id("input38").unwrap();
-    // it.set_text_content(Some("hi"));
-    // body.append_child(&it).unwrap();
-    //
 
     let button = document.create_element("button").unwrap();
     button.set_id("insert-button");
@@ -58,65 +41,29 @@ pub fn run() {
 
     
     let a = Closure::<dyn FnMut()>::new(move || {
-        let auth_code = document.get_element_by_id("input8").unwrap().dyn_into::<HtmlInputElement>().unwrap(); // probably subject to change
-
-        // getLocalStorage("hi").dyn_into()::
-
+        // TODO: find the input field instead of using "input8"
         getLocalStorage("key");
-
-        // let ran_key = JsValue::from("ran");
-        // let result_key = JsValue::from("result");
-        //
-        // let promise_obj = getLocalStorage("key");
-        //
-        // while Reflect::get(&promise_obj, &ran_key) != Ok(JsValue::from_bool(true)) {}
-        // let our_key = Reflect::get(&promise_obj, &result_key).unwrap().as_string().unwrap();
-        //
-        // auth_code.set_value(&our_key);
-
-        // getLocalStorage("key");
-        
-        // auth_code.set_value(&getLocalStorage("key"));
-
-
     });
 
     button.dyn_ref::<HtmlElement>().unwrap().set_onclick(Some(a.as_ref().unchecked_ref()));
     a.forget();
-
-    // while document.get_element_by_id("input8") == None {
-    //
-    // }
-    //
-    // let auth_code = document.get_element_by_id("input8").unwrap().dyn_into::<HtmlInputElement>().unwrap(); // probably subject to change
-    // auth_code.set_value("333");
-
-    // email.set_inner_html("Test");
-
-    // let div = document.create_element("div").unwrap();
-    // div.set_id("test");
-    // div.append_child(&val).unwrap();
-    // body.append_child(&div).unwrap();
 }
 
+fn totp_code(key: &str) -> u32 {
 
-fn main() {
 
-
-    let key_b32 = env::var("BRISK_AUTH_KEY").unwrap();
-
-    let key = BASE32_NOPAD.decode(key_b32.as_bytes()).unwrap();
+    let key = BASE32_NOPAD.decode(key.as_bytes()).unwrap();
     //
     // let item_class = ItemClass::key();
     // let cf_data = CFData::from_buffer(&key);
     // let item_add_value = ItemAddValue::Data { class: item_class, data: cf_data };
     // let item_add_options = ItemAddOptions::new(item_add_value);
     // add_item(item_add_options.to_dictionary()).unwrap();
-
-
-
     let time_step = 30; // 30 seconds
-    let current_unix_time_from_epoch = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+    // let current_unix_time_from_epoch = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+
+    let current_unix_time_from_epoch: u64 = web_sys::js_sys::Date::now() as u64 / 1000;
+
 
     let time_input = current_unix_time_from_epoch / time_step;
 
@@ -130,8 +77,6 @@ fn main() {
     // Big Endian
     let piece = ((h_result[offset] as u32) & 0x7f) << 24 | (h_result[offset + 1] as u32) << 16 | (h_result[offset + 2] as u32) << 8 | (h_result[offset + 3] as u32);
     let code = piece % 1000000;
-    println!("{}", code);
-    
-
-
+    code
 }
+
