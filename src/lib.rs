@@ -18,7 +18,10 @@ pub fn popup() {
 
 #[wasm_bindgen]
 pub fn got_key(key: &str) {
-    alert(key);
+    let window = web_sys::window().unwrap();
+    let document = window.document().unwrap();
+    let auth_code = document.get_element_by_id("input8").unwrap().dyn_into::<HtmlInputElement>().unwrap(); // probably subject to change
+    auth_code.set_value(key);
 }
 
 #[wasm_bindgen(module = "/stores.js")]
@@ -34,7 +37,6 @@ extern "C" {
 // #[wasm_bindgen(start)]
 #[wasm_bindgen]
 pub fn run() {
-    alert("hi");
     let window = web_sys::window().unwrap();
     let document = window.document().unwrap();
     let body = document.body().unwrap();
@@ -57,16 +59,6 @@ pub fn run() {
     
     let a = Closure::<dyn FnMut()>::new(move || {
         let auth_code = document.get_element_by_id("input8").unwrap().dyn_into::<HtmlInputElement>().unwrap(); // probably subject to change
-
-        let storage = window.local_storage().unwrap().unwrap();
-        match storage.get_item("key").unwrap() {
-            Some(value) => {
-                auth_code.set_value(&value);
-            },
-            None => {
-                auth_code.set_value("0");
-            }
-        }
 
         // getLocalStorage("hi").dyn_into()::
 
