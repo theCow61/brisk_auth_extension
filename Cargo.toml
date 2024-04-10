@@ -22,5 +22,8 @@ features = [
   "HtmlElement",
   "Node",
   "HtmlInputElement",
-  "Storage"
+  "Storage",
+  "Event",
+  "EventTarget",
+  "EventInit"
 ]

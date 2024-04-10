@@ -2,7 +2,11 @@ use data_encoding::BASE32_NOPAD;
 use hmac_sha1::hmac_sha1;
 
 use wasm_bindgen::prelude::*;
-use web_sys::{Element, Document, HtmlElement, HtmlInputElement, Storage, js_sys::{eval, Reflect}};
+use web_sys::{HtmlElement, HtmlInputElement, EventInit, Event};
+
+/// TODO:
+/// input8 may change, locate the input within software instead of this
+const ISU_LOGIN_AUTH_INPUT_ID: &str = "input8";
 
 #[wasm_bindgen]
 extern "C" {
@@ -19,9 +23,17 @@ pub fn popup() {
 pub fn got_key(key: &str) {
     let window = web_sys::window().unwrap();
     let document = window.document().unwrap();
-    let auth_code = document.get_element_by_id("input8").unwrap().dyn_into::<HtmlInputElement>().unwrap(); // probably subject to change
+    let auth_code = document.get_element_by_id(ISU_LOGIN_AUTH_INPUT_ID).unwrap().dyn_into::<HtmlInputElement>().unwrap(); // probably subject to change
     auth_code.set_value(&format!("{}", totp_code(key)));
+
+    // So it recognizes it as changed
+    let mut event_ops = EventInit::new();
+    event_ops.bubbles(true);
+    let event = Event::new_with_event_init_dict("input", &event_ops).unwrap();
+    let _ = auth_code.dispatch_event(&event);
 }
+
+
 
 #[wasm_bindgen(module = "/stores.js")]
 extern "C" {
