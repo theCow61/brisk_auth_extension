@@ -4,7 +4,7 @@ Are you being forced to do 2 factor authentication? This may be your solution. T
 then you have to pull out your phone. Currently, this is specifically for Iowa State University logins.
 
 
-Did you know that google authenticator uses a known algorithm? Check it out [here]([https://datatracker.ietf.org/doc/html/rfc4226#section-5).The point of this extension is to calculate the codes produced by google authenticator, and then give you the option to plop that code right into the 2 factor authentication input box.
+Did you know that google authenticator uses a known algorithm? Check it out [here](https://datatracker.ietf.org/doc/html/rfc4226#section-5). The point of this extension is to calculate the codes produced by google authenticator, and then give you the option to plop that code right into the 2 factor authentication input box.
 This extension utilizes WebAssembly and Rust.
 
 # Setup
