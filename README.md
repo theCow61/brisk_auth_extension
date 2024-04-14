@@ -10,6 +10,12 @@ This extension utilizes WebAssembly and Rust.
 # Setup
 You will want to setup google authenticator in okta for ISU. Make sure you it also setup on your phone as this extension doesn't work for every login menu, and so you have a backup.
 
+![Setup](https://github.com/theCow61/brisk_auth_extension/assets/68983984/aa0f3e11-2518-4ba0-9a8e-3cdcb0631971)
+
+
+https://github.com/theCow61/brisk_auth_extension/assets/68983984/00593dff-f4b7-4d8f-a945-4485c68686af
+
+
 
 
 
